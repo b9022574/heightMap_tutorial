@@ -1,4 +1,4 @@
-#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_*MEAN
 #include <windows.h>
 #include <d3d11.h>
 
@@ -36,6 +36,7 @@ class HeightMapApplication : public CommonApp
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+
 bool HeightMapApplication::HandleStart()
 {
 	this->SetWindowTitle("HeightMap");
@@ -65,27 +66,34 @@ bool HeightMapApplication::HandleStart()
 	m_pMapVtxs = new Vertex_Pos3fColour4ubNormal3f[m_HeightMapVtxCount];
 
 	int index = 0;
-	
+
 	for (int i = 0; i < width * lenght; ++i) {
+		
+		XMVECTOR normal = { 0.0f, 0.0f, 0.0f };
 
-
-			m_pMapVtxs[index] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i], MAP_COLOUR, XMFLOAT3(0.0f, 0.0f, -1.0f));
-			m_pMapVtxs[index + 1] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + 1], MAP_COLOUR, XMFLOAT3(0.0f, 0.0f, -1.0f));
-			m_pMapVtxs[index + 2] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + m_HeightMapWidth], MAP_COLOUR, XMFLOAT3(0.0f, 0.0f, -1.0f));
-			m_pMapVtxs[index + 3] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + 1], MAP_COLOUR, XMFLOAT3(0.0f, 0.0f, -1.0f));
-			m_pMapVtxs[index + 4] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + m_HeightMapWidth + 1], MAP_COLOUR, XMFLOAT3(0.0f, 0.0f, -1.0f));
-			m_pMapVtxs[index + 5] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + m_HeightMapWidth], MAP_COLOUR, XMFLOAT3(0.0f, 0.0f, -1.0f));
+		m_pMapVtxs[index] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i], MAP_COLOUR, XMFLOAT3(0.0f, 1.0f, 0.0f));
+		m_pMapVtxs[index + 1] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + 1], MAP_COLOUR, XMFLOAT3(0.0f, 1.0f, 0.0f));
+		m_pMapVtxs[index + 2] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + m_HeightMapWidth + 1], MAP_COLOUR, XMFLOAT3(0.0f, 1.0f, 0.0f));
+		m_pMapVtxs[index + 3] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + 1], MAP_COLOUR, XMFLOAT3(0.0f, 1.0f, 0.0f));
+		m_pMapVtxs[index + 4] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + m_HeightMapWidth + 1], MAP_COLOUR, XMFLOAT3(0.0f, 1.0f, 0.0f));
+		m_pMapVtxs[index + 5] = Vertex_Pos3fColour4ubNormal3f(m_pHeightMap[i + m_HeightMapWidth], MAP_COLOUR, XMFLOAT3(0.0f, 1.0f, 0.0f));
 			
-			index += 6;
-
+		index += 6;
+		
 	}
-
 
 	m_pHeightMapBuffer = CreateImmutableVertexBuffer(m_pD3DDevice, sizeof Vertex_Pos3fColour4ubNormal3f * m_HeightMapVtxCount, m_pMapVtxs);
 
 	delete m_pMapVtxs;
 
 	return true;
+}
+
+
+XMFLOAT3 CrossProduct(XMFLOAT3 a, XMFLOAT3 b) {
+
+	return XMFLOAT3(a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x);
+
 }
 
 //////////////////////////////////////////////////////////////////////
